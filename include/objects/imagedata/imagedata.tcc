@@ -22,10 +22,10 @@
     #include <utilities/formathandler/types/ddshandler.hpp>
     #include <utilities/formathandler/types/ktxhandler.hpp>
     #include <utilities/formathandler/types/pkmhandler.hpp>
-
-    #include <utilities/formathandler/types/jpghandler.hpp>
-    #include <utilities/formathandler/types/pnghandler.hpp>
 #endif
+
+#include <utilities/formathandler/types/jpghandler.hpp>
+#include <utilities/formathandler/types/pnghandler.hpp>
 
 #include <functional>
 #include <memory>

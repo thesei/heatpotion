@@ -28,6 +28,7 @@ namespace love
             int width          = 0;
             int height         = 0;
             size_t size        = 0;
+            bool tiled         = false;
             std::unique_ptr<uint8_t[]> data;
         };
 

@@ -80,7 +80,7 @@ if(NINTENDO_3DS)
         COMMAND ${CMAKE_COMMAND} -E cat "${CMAKE_CURRENT_BINARY_DIR}/lovepotion.3dsx" "game.love" > "${CMAKE_CURRENT_BINARY_DIR}/lovepotion_test.3dsx"
     )
 
-    execute_process(COMMAND patch -d ${CMAKE_CURRENT_BINARY_DIR}/luasocket/libluasocket -N -i ${PROJECT_SOURCE_DIR}/platform/ctr/libraries/luasocket.patch)
+    execute_process(COMMAND patch -l -d ${CMAKE_CURRENT_BINARY_DIR}/luasocket/libluasocket -N -i ${PROJECT_SOURCE_DIR}/platform/ctr/libraries/luasocket.patch)
 endif()
 
 # aarch64-none-elf-cmake

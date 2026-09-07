@@ -48,12 +48,6 @@ namespace love
         static constexpr std::array<const char*, 3> textures = { ".png", ".jpg", ".jpeg" };
         static constexpr std::array<const char*, 2> fonts    = { ".ttf", ".otf" };
 
-        for (auto extension : textures)
-        {
-            if (extension == filepath.extension())
-                filepath.replace_extension(".t3x");
-        }
-
         for (auto extension : fonts)
         {
             if (extension == filepath.extension())

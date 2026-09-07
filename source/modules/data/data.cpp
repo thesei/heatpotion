@@ -24,7 +24,7 @@ CompressedData* DataModule::Compress(Compressor::Format format, const char* rawB
 
     try
     {
-        data = new CompressedData(format, compressed, rawSize, true);
+        data = new CompressedData(format, compressed, size, rawSize, true);
     }
     catch (love::Exception&)
     {

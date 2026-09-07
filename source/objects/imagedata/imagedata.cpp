@@ -51,6 +51,41 @@ void ImageData<Console::ALL>::Decode(Data* data)
     if (image.size != sliceSize)
         throw love::Exception("Could not convert image!");
 
+    if (Console::Is(Console::CTR) && !image.tiled)
+    {
+        if (image.format != PIXELFORMAT_RGBA8_UNORM)
+            throw love::Exception("Could not convert image to a tiled RGBA8 texture!");
+
+        if (image.width > LOVE_TEX3DS_MAX || image.height > LOVE_TEX3DS_MAX)
+            throw love::Exception("Image dimensions exceed the 3DS texture limit.");
+
+        const auto tiledWidth = NextPo2(image.width);
+        const auto tiledSize  = love::GetPixelFormatSliceSize(image.format, image.width, image.height);
+
+        auto tiledData = std::make_unique<uint8_t[]>(tiledSize);
+        std::memset(tiledData.get(), 0, tiledSize);
+
+        for (int y = 0; y < image.height; y++)
+        {
+            for (int x = 0; x < image.width; x++)
+            {
+                const auto offset = (y * image.width + x) * sizeof(uint32_t);
+                const auto* source = image.data.get() + offset;
+
+                auto* destination =
+                    Color::FromTile<uint32_t>(tiledData.get(), tiledWidth, { (float)x, (float)y });
+
+                *destination = static_cast<uint32_t>(source[3]) |
+                               (static_cast<uint32_t>(source[2]) << 8) |
+                               (static_cast<uint32_t>(source[1]) << 16) |
+                               (static_cast<uint32_t>(source[0]) << 24);
+            }
+        }
+
+        image.data  = std::move(tiledData);
+        image.tiled = true;
+    }
+
     this->width  = image.width;
     this->height = image.height;
     this->data   = std::move(image.data);
