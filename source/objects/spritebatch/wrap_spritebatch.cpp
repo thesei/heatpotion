@@ -78,10 +78,16 @@ int Wrap_SpriteBatch::GetColor(lua_State* L)
     auto* self       = Wrap_SpriteBatch::CheckSpriteBatch(L, 1);
     const auto color = self->GetColor();
 
-    lua_pushnumber(L, color.r);
-    lua_pushnumber(L, color.g);
-    lua_pushnumber(L, color.b);
-    lua_pushnumber(L, color.a);
+    if (!color)
+    {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    lua_pushnumber(L, color->r);
+    lua_pushnumber(L, color->g);
+    lua_pushnumber(L, color->b);
+    lua_pushnumber(L, color->a);
 
     return 4;
 }
@@ -89,6 +95,13 @@ int Wrap_SpriteBatch::GetColor(lua_State* L)
 int Wrap_SpriteBatch::SetColor(lua_State* L)
 {
     auto* self = Wrap_SpriteBatch::CheckSpriteBatch(L, 1);
+
+    if (lua_isnoneornil(L, 2))
+    {
+        self->SetColor();
+        return 0;
+    }
+
     Color color {};
 
     if (lua_istable(L, 2))

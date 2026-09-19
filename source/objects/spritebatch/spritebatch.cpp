@@ -18,7 +18,6 @@ SpriteBatch::SpriteBatch(Texture<Console::Which>* texture, int size) :
     texture(texture),
     size(size),
     next(0),
-    color(1.0f, 1.0f, 1.0f, 1.0f),
     rangeStart(-1),
     rangeCount(-1)
 {
@@ -70,7 +69,7 @@ int SpriteBatch::Add(Quad* quad, const Matrix4& matrix, int index)
     size_t offset      = spriteIndex * 0x06;
     auto* vertices     = &this->buffer[offset];
 
-    std::array<float, 0x04> color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    const auto color = this->color.value_or(Color(Color::WHITE)).array();
 
     // clang-format off
     /*
@@ -164,7 +163,12 @@ void SpriteBatch::SetColor(const Color& color)
     this->color = clamped;
 }
 
-Color SpriteBatch::GetColor() const
+void SpriteBatch::SetColor()
+{
+    this->color.reset();
+}
+
+std::optional<Color> SpriteBatch::GetColor() const
 {
     return this->color;
 }
@@ -254,12 +258,18 @@ void SpriteBatch::Draw(Graphics<Console::Which>& graphics, const Matrix4& matrix
     command.handles = { this->texture };
 #endif
 
+    const size_t vertexStart = start * 0x06;
+    const auto drawColor     = graphics.GetColor().array();
+
     transform.TransformXYPure(std::span(command.vertices.get(), command.count),
-                              std::span(&this->buffer[start], command.count));
+                              std::span(&this->buffer[vertexStart], command.count));
     for (size_t index = 0; index < command.count; index++)
     {
-        command.vertices[index].texcoord = this->buffer[start * 0x06 + index].texcoord;
-        command.vertices[index].color    = this->buffer[start * 0x06 + index].color;
+        const auto& vertex = this->buffer[vertexStart + index];
+        command.vertices[index].texcoord = vertex.texcoord;
+
+        for (size_t component = 0; component < drawColor.size(); component++)
+            command.vertices[index].color[component] = vertex.color[component] * drawColor[component];
     }
 
     Renderer<Console::Which>::Instance().Render(command);

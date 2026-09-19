@@ -10,6 +10,7 @@
 
 #include <utilities/driver/renderer/vertex.hpp>
 
+#include <optional>
 #include <vector>
 
 namespace love
@@ -43,7 +44,7 @@ namespace love
 
         void SetColor();
 
-        Color GetColor() const;
+        std::optional<Color> GetColor() const;
 
         int GetCount() const;
 
@@ -68,7 +69,7 @@ namespace love
         int size;
         int next;
 
-        Color color;
+        std::optional<Color> color;
 
         std::vector<vertex::Vertex> buffer;
 
