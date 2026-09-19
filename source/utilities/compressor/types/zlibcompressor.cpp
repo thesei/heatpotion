@@ -179,7 +179,7 @@ int ZlibCompressor::zlibDecompress(Compressor::Format format, Bytef* destination
     if (error != Z_OK)
         return error;
 
-    error = inflate(&stream, windowBits);
+    error = inflate(&stream, Z_FINISH);
 
     if (error != Z_STREAM_END)
     {
