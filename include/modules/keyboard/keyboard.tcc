@@ -7,6 +7,8 @@
 
 #include <memory>
 #include <stdint.h>
+#include <string>
+#include <string_view>
 
 namespace love
 {
@@ -25,7 +27,7 @@ namespace love
         {
             uint8_t type;
             bool isPassword;
-            std::string_view hint;
+            std::string hint;
             uint32_t maxLength;
         };
 
