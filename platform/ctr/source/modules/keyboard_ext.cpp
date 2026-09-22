@@ -17,7 +17,7 @@ void Keyboard<Console::CTR>::SetTextInput(const KeyboardOptions& options)
     const auto type = (SwkbdType)options.type;
 
     swkbdInit(&this->state, type, 2, maxLength);
-    swkbdSetInitialText(&this->state, this->text.get());
+    swkbdSetInitialText(&this->state, options.text.c_str());
 
     swkbdSetHintText(&this->state, options.hint.data());
 

@@ -29,6 +29,7 @@ namespace love
             bool isPassword;
             std::string hint;
             uint32_t maxLength;
+            std::string text;
         };
 
         enum KeyboardOption
@@ -37,6 +38,7 @@ namespace love
             OPTION_PASSCODE,
             OPTION_HINT,
             OPTION_MAX_LENGTH,
+            OPTION_TEXT,
             OPTION_MAX_ENUM
         };
 
@@ -80,7 +82,8 @@ namespace love
             "type",      KeyboardOption::OPTION_TYPE,
             "password",  KeyboardOption::OPTION_PASSCODE,
             "hint",      KeyboardOption::OPTION_HINT,
-            "length",    KeyboardOption::OPTION_MAX_LENGTH
+            "length",    KeyboardOption::OPTION_MAX_LENGTH,
+            "text",      KeyboardOption::OPTION_TEXT
         };
         // clang-format on
 

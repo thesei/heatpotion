@@ -67,6 +67,17 @@ int Wrap_Keyboard::SetTextInput(lua_State* L)
         }
         lua_pop(L, 1);
 
+        auto optionText = ::Keyboard::keyboardOptions.ReverseFind(::Keyboard::OPTION_TEXT);
+
+        if (optionText)
+        {
+            lua_getfield(L, 2, *optionText);
+
+            if (!lua_isnoneornil(L, -1))
+                options.text = luax::CheckString(L, -1);
+        }
+        lua_pop(L, 1);
+
         auto optionPasscode = ::Keyboard::keyboardOptions.ReverseFind(::Keyboard::OPTION_PASSCODE);
 
         if (optionPasscode)
