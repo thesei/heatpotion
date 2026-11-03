@@ -56,8 +56,25 @@ void ImageData<Console::ALL>::Decode(Data* data)
         if (image.format != PIXELFORMAT_RGBA8_UNORM)
             throw love::Exception("Could not convert image to a tiled RGBA8 texture!");
 
-        if (image.width > LOVE_TEX3DS_MAX || image.height > LOVE_TEX3DS_MAX)
-            throw love::Exception("Image dimensions exceed the 3DS texture limit.");
+        const auto sourceWidth  = image.width;
+        const auto sourceHeight = image.height;
+
+        constexpr int maxWidth  = 800;
+        constexpr int maxHeight = 480;
+
+        if (image.width > maxWidth || image.height > maxHeight)
+        {
+            if (int64_t(sourceWidth) * maxHeight > int64_t(sourceHeight) * maxWidth)
+            {
+                image.width  = maxWidth;
+                image.height = std::max(1, int(int64_t(sourceHeight) * maxWidth / sourceWidth));
+            }
+            else
+            {
+                image.width  = std::max(1, int(int64_t(sourceWidth) * maxHeight / sourceHeight));
+                image.height = maxHeight;
+            }
+        }
 
         const auto tiledWidth = NextPo2(image.width);
         const auto tiledSize  = love::GetPixelFormatSliceSize(image.format, image.width, image.height);
@@ -67,9 +84,12 @@ void ImageData<Console::ALL>::Decode(Data* data)
 
         for (int y = 0; y < image.height; y++)
         {
+            const auto sourceY = int64_t(y) * sourceHeight / image.height;
+
             for (int x = 0; x < image.width; x++)
             {
-                const auto offset = (y * image.width + x) * sizeof(uint32_t);
+                const auto sourceX = int64_t(x) * sourceWidth / image.width;
+                const auto offset = (sourceY * sourceWidth + sourceX) * sizeof(uint32_t);
                 const auto* source = image.data.get() + offset;
 
                 auto* destination =
@@ -83,6 +103,7 @@ void ImageData<Console::ALL>::Decode(Data* data)
         }
 
         image.data  = std::move(tiledData);
+        image.size  = tiledSize;
         image.tiled = true;
     }
 

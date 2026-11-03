@@ -100,8 +100,8 @@ namespace love
      */
     static inline unsigned NextPo2(unsigned x)
     {
-        if (x <= 2)
-            return x;
+        if (x <= LOVE_TEX3DS_MIN)
+            return LOVE_TEX3DS_MIN;
 
         unsigned result = 1u << (32 - __builtin_clz(x - 1));
         return std::clamp<size_t>(result, LOVE_TEX3DS_MIN, LOVE_TEX3DS_MAX);
